@@ -25,6 +25,7 @@
 package uk.jamierocks.mana.bakura.dependency;
 
 import uk.jamierocks.mana.bakura.Bakura;
+import uk.jamierocks.mana.bakura.util.BakuraConstants;
 
 import java.io.IOException;
 import java.net.URL;
@@ -55,6 +56,17 @@ public final class DependencyManager {
     private final List<Dependency> dependencies = new ArrayList<>();
 
     public DependencyManager() {
+        // Bakura has dependencies to
+        try {
+            this.checkDependency(BakuraConstants.DEFAULT_PROGRAM_PATH, new Dependency("ninja.leaping.configurate:configurate-core:3.1.1"));
+            this.checkDependency(BakuraConstants.DEFAULT_PROGRAM_PATH, new Dependency("com.google.guava:guava:19.0"));
+            this.checkDependency(BakuraConstants.DEFAULT_PROGRAM_PATH, new Dependency("ninja.leaping.configurate:configurate-hocon:3.1.1"));
+            this.checkDependency(BakuraConstants.DEFAULT_PROGRAM_PATH, new Dependency("com.typesafe:config:1.3.0"));
+        } catch (Exception e) {
+            System.out.println("Failed to check Bakura's dependencies!");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     /**

@@ -24,9 +24,13 @@
 
 package uk.jamierocks.mana.bakura;
 
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import uk.jamierocks.mana.bakura.dependency.Dependency;
 import uk.jamierocks.mana.bakura.dependency.DependencyManager;
 import uk.jamierocks.mana.bakura.util.BakuraConstants;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -41,10 +45,19 @@ public final class Bakura {
 
     public static final BakuraClassLoader classLoader;
     public static final DependencyManager dependencies;
+    public static BakuraConfiguration configuration;
 
     static {
         classLoader = new BakuraClassLoader(((URLClassLoader) Bakura.class.getClassLoader()).getURLs());
         dependencies = new DependencyManager();
+        try {
+            final ConfigurationNode node = HoconConfigurationLoader.builder().setURL(Bakura.class.getResource("/bakura.conf")).build().load();
+            configuration = new BakuraConfiguration(node);
+        } catch (IOException e) {
+            System.out.println("Failed to load Bakura configuration!");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     public static void launch(String target, String[] args) {
@@ -52,6 +65,10 @@ public final class Bakura {
     }
 
     public static void launch(Path programPath, String target, String[] args) {
+        for (BakuraConfiguration.Dependency dependency : configuration.getDependencies()) {
+            dependencies.addDependency(new Dependency(dependency.getRepo(), dependency.getName()));
+        }
+
         try {
             dependencies.checkDependencies(programPath);
         } catch (Exception e) {

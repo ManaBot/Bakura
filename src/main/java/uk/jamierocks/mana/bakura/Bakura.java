@@ -79,7 +79,7 @@ public final class Bakura {
 
         try {
             final Class targetClass = Class.forName(target, false, classLoader);
-            final Method mainMethod = targetClass.getMethod("main", new Class[]{String.class});
+            final Method mainMethod = targetClass.getMethod("main", String[].class);
 
             Thread.currentThread().setContextClassLoader(classLoader);
 

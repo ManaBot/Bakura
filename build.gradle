@@ -6,7 +6,6 @@ plugins {
     id 'eclipse'
 
     id 'net.minecrell.licenser' version '0.2.1'
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 defaultTasks 'clean', 'licenseFormat'
 
@@ -16,7 +15,7 @@ targetCompatibility = 1.8
 group 'uk.jamierocks.mana'
 archivesBaseName = project.name.toLowerCase()
 description = 'A bootstrap for Java applications'
-version '1.0.0-SNAPSHOT'
+version '1.0.0'
 ext.url = 'http://mana.jamierocks.uk/'
 
 repositories {
@@ -24,18 +23,16 @@ repositories {
 }
 
 dependencies {
-
+    compile 'ninja.leaping.configurate:configurate-core:3.1.1'
+    compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'
 }
 
 license {
     header file('HEADER.txt')
     include '**/*.java'
-    include '**/*.groovy'
 }
 
 jar {
-    classifier = 'base'
-
     manifest {
         attributes(
                 'Implementation-Title': project.name,
@@ -43,10 +40,6 @@ jar {
                 'Main-Class': 'uk.jamierocks.mana.bakura.Main'
         )
     }
-}
-
-shadowJar {
-    classifier = ''
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
@@ -60,7 +53,6 @@ task sourcesJar(type: Jar, dependsOn: 'classes') {
 }
 
 artifacts {
-    archives shadowJar
     archives javadocJar
     archives sourcesJar
 }
@@ -90,7 +82,7 @@ uploadArchives {
 
                     issueManagement {
                         system = 'GitHub'
-                        url = 'https://github.com/ManaBot/Carbon/issues'
+                        url = 'https://github.com/ManaBot/Bakura/issues'
                     }
 
                     licenses {

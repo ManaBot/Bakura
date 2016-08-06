@@ -22,26 +22,21 @@
  * THE SOFTWARE.
  */
 
-package uk.jamierocks.mana.bakura;
+package uk.jamierocks.mana.bakura.util;
 
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
- * The classloader for Bakura.
+ * Constants for Bakura.
  *
  * @author Jamie Mansfield
  * @since 1.0.0
  */
-public class BakuraClassLoader extends URLClassLoader {
+public final class BakuraConstants {
 
-    public BakuraClassLoader(URL[] urls) {
-        super(urls);
-    }
+    public static final Path DEFAULT_PROGRAM_PATH = Paths.get(".");
 
-    @Override
-    public void addURL(URL url) {
-        super.addURL(url);
-    }
+    public static final String MAVEN_CENTRAL = "https://repo1.maven.org/maven2/";
 
 }

@@ -1,0 +1,111 @@
+plugins {
+    id 'java'
+    id 'maven'
+
+    id 'idea'
+    id 'eclipse'
+
+    id 'net.minecrell.licenser' version '0.2.1'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+defaultTasks 'clean', 'licenseFormat'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+group 'uk.jamierocks.mana'
+archivesBaseName = project.name.toLowerCase()
+description = 'A bootstrap for Java applications'
+version '1.0.0-SNAPSHOT'
+ext.url = 'http://mana.jamierocks.uk/'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+license {
+    header file('HEADER.txt')
+    include '**/*.java'
+    include '**/*.groovy'
+}
+
+jar {
+    classifier = 'base'
+
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': version,
+                'Main-Class': 'uk.jamierocks.mana.bakura.Main'
+        )
+    }
+}
+
+shadowJar {
+    classifier = ''
+}
+
+task javadocJar(type: Jar, dependsOn: 'javadoc') {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar, dependsOn: 'classes') {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives shadowJar
+    archives javadocJar
+    archives sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (System.getenv('MAVEN_RELEASES') != null) {
+                repository(url: 'file://' + System.getenv('MAVEN_RELEASES'))
+                snapshotRepository(url: 'file://' + System.getenv('MAVEN_SNAPSHOTS'))
+            }
+
+            pom {
+                artifactId = project.archivesBaseName
+
+                project {
+                    name = project.name
+                    description = project.description
+                    packaging = 'jar'
+                    url = project.url
+
+                    scm {
+                        url = "https://github.com/ManaBot/Bakura"
+                        connection = "scm:git:https://github.com/ManaBot/Bakura.git"
+                        developerConnection = "scm:git:git@github.com:ManaBot/Bakura.git"
+                    }
+
+                    issueManagement {
+                        system = 'GitHub'
+                        url = 'https://github.com/ManaBot/Carbon/issues'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'http://opensource.org/licenses/MIT'
+                            distribution = 'repo'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14'
+}

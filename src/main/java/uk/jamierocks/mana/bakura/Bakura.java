@@ -81,6 +81,8 @@ public final class Bakura {
             final Class targetClass = Class.forName(target, false, classLoader);
             final Method mainMethod = targetClass.getMethod("main", new Class[]{String.class});
 
+            Thread.currentThread().setContextClassLoader(classLoader);
+
             System.out.println("Launching " + target + "...");
             mainMethod.invoke(null, args);
         } catch (Exception e) {

@@ -24,6 +24,8 @@
 
 package uk.jamierocks.mana.bakura.dependency;
 
+import uk.jamierocks.mana.bakura.Bakura;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -75,7 +77,9 @@ public final class DependencyManager {
      */
     public void checkDependencies(Path librariesPath) throws IOException, NoSuchAlgorithmException {
         for (Dependency dependency : this.dependencies) {
+            final Path dependencyPath = librariesPath.resolve(dependency.getJarPath());
             this.checkDependency(librariesPath, dependency);
+            Bakura.classLoader.addURL(dependencyPath.toUri().toURL());
         }
     }
 

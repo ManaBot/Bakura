@@ -112,7 +112,7 @@ public final class DependencyManager {
         }
 
         String expected = getETag(con);
-        if (!expected.isEmpty() && !expected.startsWith("{SHA1{")) {
+        if (!expected.isEmpty() && !remoteUrl.contains("maven.sk89q.com")) {
             String hash = toHexString(md5.digest());
             if (hash.equals(expected)) {
                 System.out.println("Successfully downloaded " + name + " and verified checksum!");

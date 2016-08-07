@@ -6,6 +6,7 @@ plugins {
     id 'eclipse'
 
     id 'net.minecrell.licenser' version '0.2.1'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 defaultTasks 'clean', 'licenseFormat'
 
@@ -23,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    compile 'ninja.leaping.configurate:configurate-core:3.1.1'
+    compile 'com.google.guava:guava:19.0'
     compile 'ninja.leaping.configurate:configurate-hocon:3.1.1'
 }
 
@@ -33,6 +34,8 @@ license {
 }
 
 jar {
+    classifier = 'base'
+
     manifest {
         attributes(
                 'Implementation-Title': project.name,
@@ -40,6 +43,10 @@ jar {
                 'Main-Class': 'uk.jamierocks.mana.bakura.Main'
         )
     }
+}
+
+shadowJar {
+    classifier = ''
 }
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
@@ -53,6 +60,7 @@ task sourcesJar(type: Jar, dependsOn: 'classes') {
 }
 
 artifacts {
+    archives shadowJar
     archives javadocJar
     archives sourcesJar
 }

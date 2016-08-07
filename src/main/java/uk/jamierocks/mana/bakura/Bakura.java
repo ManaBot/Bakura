@@ -49,6 +49,7 @@ public final class Bakura {
 
     static {
         classLoader = new BakuraClassLoader(((URLClassLoader) Bakura.class.getClassLoader()).getURLs());
+        Thread.currentThread().setContextClassLoader(classLoader);
         dependencies = new DependencyManager();
         try {
             final ConfigurationNode node = HoconConfigurationLoader.builder().setURL(Bakura.class.getResource("/bakura.conf")).build().load();
@@ -70,7 +71,7 @@ public final class Bakura {
         }
 
         try {
-            dependencies.checkDependencies(programPath);
+            dependencies.checkDependencies(programPath.resolve("libraries"));
         } catch (Exception e) {
             System.out.println("Failed to get dependencies!");
             e.printStackTrace();
@@ -80,8 +81,6 @@ public final class Bakura {
         try {
             final Class targetClass = Class.forName(target, false, classLoader);
             final Method mainMethod = targetClass.getMethod("main", String[].class);
-
-            Thread.currentThread().setContextClassLoader(classLoader);
 
             System.out.println("Launching " + target + "...");
             mainMethod.invoke(null, args);
